@@ -24,4 +24,29 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 	};
 }
 
-module.exports = { sqlForPartialUpdate };
+function queryCompanies(query) {
+	/*
+	Combinations of search companies using name, minEmployees, maxEmployees
+	*/
+
+	const queryString = [];
+	// for query.name --- to_tsvector(name) @@ to_tsquery('${query.name}')
+	if (query.name) {
+		queryString.push(`to_tsvector(name) @@ to_tsquery('${query.name}')`);
+	}
+	// for query.maxEmployees and query.minEmployees --- num_employees BETWEEN ${query.minEmployees} AND ${query.maxEmployees}
+	if (query.minEmployees && query.maxEmployees) {
+		queryString.push(
+			`num_employees BETWEEN ${query.minEmployees} AND ${query.maxEmployees}`
+		);
+		// for query.minEmployees --- num_employees >= ${query.minEmployees}
+	} else if (query.minEmployees) {
+		queryString.push(`num_employees >= ${query.minEmployees}`);
+		// for query.maxEmployees --- num_employees < ${query.maxEmployees}
+	} else if (query.maxEmployees) {
+		queryString.push(`num_employees < ${query.maxEmployees}`);
+	}
+	return queryString;
+}
+
+module.exports = { sqlForPartialUpdate, queryCompanies };
