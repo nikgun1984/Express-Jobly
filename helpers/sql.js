@@ -28,7 +28,7 @@ function queryCompanies(query) {
 	/*
 	Combinations of search companies using name, minEmployees, maxEmployees
 	*/
-
+	if (query === undefined) return {};
 	const queryString = [];
 	// for query.name --- to_tsvector(name) @@ to_tsquery('${query.name}')
 	if (query.name) {

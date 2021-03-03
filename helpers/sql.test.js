@@ -1,6 +1,6 @@
 "use strict";
 // PART 1 Writing Test for sql.js
-const { sqlForPartialUpdate } = require("./sql");
+const { sqlForPartialUpdate, queryCompanies } = require("./sql");
 
 describe("test partial update", function () {
 	let jsToSql;
@@ -25,5 +25,15 @@ describe("test partial update", function () {
 		expect(() => {
 			sqlForPartialUpdate(data, jsToSql);
 		}).toThrow("No data");
+	});
+});
+
+describe("test query companies", function () {
+	const query1 = { name: "baker", minEmployees: 200, maxEmployees: 400 };
+	test("return array of WHERE clause for query", function () {
+		expect(queryCompanies(query1)).toEqual([
+			"to_tsvector(name) @@ to_tsquery('baker')",
+			"num_employees BETWEEN 200 AND 400",
+		]);
 	});
 });
