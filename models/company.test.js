@@ -1,7 +1,11 @@
 "use strict";
 
 const db = require("../db.js");
-const { BadRequestError, NotFoundError } = require("../expressError");
+const {
+	BadRequestError,
+	NotFoundError,
+	UnauthorizedError,
+} = require("../expressError");
 const Company = require("./company.js");
 const {
 	commonBeforeAll,
@@ -52,7 +56,7 @@ describe("create", function () {
 			await Company.create(newCompany);
 			fail();
 		} catch (err) {
-			expect(err instanceof BadRequestError).toBeTruthy();
+			expect(err instanceof UnauthorizedError).toBeTruthy();
 		}
 	});
 });
