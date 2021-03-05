@@ -5,7 +5,7 @@ const { BadRequestError } = require("../expressError");
    UPDATE <table> SET "first_name"=$1, "age"=$2... <|_________|
 */
 
-function sqlForPartialUpdate(dataToUpdate, jsToSql) {
+function sqlForPartialUpdate(dataToUpdate, jsToSql = {}) {
 	/*
   dataToUpdate: data coming from database consisting of columns
   jsToSql: object consisting of column name attributes as key and its equivalent string
@@ -49,4 +49,17 @@ function queryCompanies(query) {
 	return queryString;
 }
 
-module.exports = { sqlForPartialUpdate, queryCompanies };
+function queryJobs(query) {
+	/*
+	Combinations of search jobs using title, companyHandle
+	*/
+	if (query === undefined) return {};
+	const queryString = [];
+	// for query.title --- to_tsvector(title) @@ to_tsquery('${query.title}')
+	if (query.title) {
+		queryString.push(`to_tsvector(title) @@ to_tsquery('${query.title}')`);
+	}
+	return queryString;
+}
+
+module.exports = { sqlForPartialUpdate, queryCompanies, queryJobs };
