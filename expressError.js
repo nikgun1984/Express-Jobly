@@ -28,14 +28,6 @@ class UnauthorizedError extends ExpressError {
 	}
 }
 
-/** 404 UNAUTHORIZED error. */
-
-class UnauthorizedAdminError extends ExpressError {
-	constructor(message = "Unauthorized Admin") {
-		super(message, 404);
-	}
-}
-
 /** 400 BAD REQUEST error. */
 
 class BadRequestError extends ExpressError {
@@ -56,7 +48,6 @@ module.exports = {
 	ExpressError,
 	NotFoundError,
 	UnauthorizedError,
-	UnauthorizedAdminError,
 	BadRequestError,
 	ForbiddenError,
 };

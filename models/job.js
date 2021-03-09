@@ -2,7 +2,7 @@
 
 // NOTE/OBSERVATION: "equity" column uses NUMERIC type due to potential precision loss
 // with FLOAT another problem will arise when we query this value but we should use
-// library pg. The value that is returted from querying is a string due to the
+// library pg. The value that is returned from querying is a string due to the
 // fact again to keep precision especially in financial data.
 
 const db = require("../db");
@@ -23,7 +23,7 @@ class Job {
 			`INSERT INTO jobs 
 			(title, salary, equity, company_handle)
 			VALUES ($1, $2, $3, $4)
-			RETURNING title, salary, equity, company_handle AS "companyHandle"
+			RETURNING id, title, salary, equity, company_handle AS "companyHandle"
 			`,
 			[title, salary, equity, companyHandle]
 		);
