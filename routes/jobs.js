@@ -59,6 +59,23 @@ router.get("/", async function (req, res, next) {
 	}
 });
 
+/** GET /[jobId] => { job }
+ *
+ * Returns { id, title, salary, equity, company }
+ *   where company is { handle, name, description, numEmployees, logoUrl }
+ *
+ * Authorization required: none
+ */
+
+router.get("/:id", async function (req, res, next) {
+	try {
+		const job = await Job.get(req.params.id);
+		return res.json({ job });
+	} catch (err) {
+		return next(err);
+	}
+});
+
 /** PATCH /jobId { fld1, fld2, ... } => { job }
  *
  * Patches job data.

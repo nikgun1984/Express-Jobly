@@ -39,14 +39,42 @@ class Job {
 		const queryArray = queryJobs(query);
 
 		const jobRes = await db.query(
-			`SELECT title,
+			`SELECT id, title,
 			            salary,
-			            equity
+			            equity,
+						company_handle AS "companyHandle"
 			            FROM jobs ${
 										queryArray.length ? "WHERE " + queryArray.join("") : ""
 									} ORDER BY title`
 		);
 		return jobRes.rows;
+	}
+
+	/** Given a job id, return data about job.
+	 *
+	 * Returns { id, title, salary, equity, companyHandle, company }
+	 *   where company is { handle, name, description, numEmployees, logoUrl }
+	 *
+	 * Throws NotFoundError if not found.
+	 **/
+
+	static async get(id) {
+		const jobRes = await db.query(
+			`SELECT id,
+                  title,
+                  salary,
+                  equity,
+                  company_handle AS "companyHandle"
+           FROM jobs
+           WHERE id = $1`,
+			[id]
+		);
+
+		const job = jobRes.rows[0];
+
+		if (!job) throw new NotFoundError(`No job: ${id}`);
+
+		return job;
 	}
 
 	/** Update job data with `data`.

@@ -12,6 +12,7 @@ const {
 	commonAfterAll,
 	u1Token,
 	adminToken,
+	jobIds,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -65,5 +66,94 @@ describe("POST /", function () {
 			})
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(400);
+	});
+});
+
+/************************************** GET /jobs */
+
+describe("GET /jobs", function () {
+	test("ok for anon", async function () {
+		const resp = await request(app).get("/jobs");
+		expect(resp.body).toEqual({
+			jobs: [
+				{
+					title: "Position1",
+					salary: 100000,
+					equity: "0.00043",
+					companyHandle: "c3",
+					id: expect.any(Number),
+				},
+				{
+					title: "Position2",
+					salary: 100000,
+					equity: "0.00043",
+					companyHandle: "c2",
+					id: expect.any(Number),
+				},
+				{
+					title: "Position3",
+					salary: 100000,
+					equity: "0.00043",
+					companyHandle: "c1",
+					id: expect.any(Number),
+				},
+			],
+		});
+	});
+	test("query title", async function () {
+		const resp = await request(app).get("/jobs").query({ title: "Position1" });
+		expect(resp.body).toEqual({
+			jobs: [
+				{
+					title: "Position1",
+					salary: 100000,
+					equity: "0.00043",
+					companyHandle: "c3",
+					id: expect.any(Number),
+				},
+			],
+		});
+	});
+});
+
+/************************************** GET /companies/:handle */
+
+describe("GET /jobs/:id", function () {
+	test("works for anon", async function () {
+		const resp = await request(app).get(`/jobs/${jobIds[0]}`);
+		expect(resp.body).toEqual({
+			job: {
+				id: jobIds[0],
+				title: "Position1",
+				salary: 100000,
+				equity: "0.00043",
+				companyHandle: "c3",
+			},
+		});
+	});
+
+	test("not found for no such company", async function () {
+		const resp = await request(app).get(`/jobs/0`);
+		expect(resp.statusCode).toEqual(500);
+	});
+});
+
+describe("PATCH /jobs/:id", function () {
+	test("works for admin", async function () {
+		const resp = await request(app).get(`/jobs/${jobIds[0]}`);
+		expect(resp.body).toEqual({
+			job: {
+				id: jobIds[0],
+				title: "Position1",
+				salary: 100000,
+				equity: "0.00043",
+				companyHandle: "c3",
+			},
+		});
+	});
+
+	test("not found for no such company", async function () {
+		const resp = await request(app).get(`/jobs/0`);
+		expect(resp.statusCode).toEqual(500);
 	});
 });

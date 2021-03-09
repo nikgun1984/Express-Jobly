@@ -51,7 +51,7 @@ function queryCompanies(query) {
 
 function queryJobs(query) {
 	/*
-	Combinations of search jobs using title, companyHandle
+	Combinations of search jobs using title
 	*/
 	if (query === undefined) return {};
 	const queryString = [];

@@ -368,3 +368,10 @@ VALUES ('Conservator, furniture', 110000, 0, 'watson-davis'),
        ('Learning disability nurse', 66000, NULL, 'ayala-buchanan'),
        ('Research scientist (medical)', 175000, NULL, 'norman-harvey'),
        ('Accommodation manager', 126000, NULL, 'mejia-scott-ryan');
+
+ALTER TABLE companies ADD document tsvector;
+UPDATE companies SET document = to_tsvector(name);
+
+ALTER TABLE jobs ADD document tsvector;
+UPDATE jobs SET document = to_tsvector(title);
+
