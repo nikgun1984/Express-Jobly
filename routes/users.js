@@ -74,6 +74,20 @@ router.get("/:username", ensureAdmin, async function (req, res, next) {
 	}
 });
 
+router.post(
+	"/:username/jobs/:id",
+	ensureCorrectUserOrAdmin,
+	async function (req, res, next) {
+		try {
+			const user = await User.get(req.params.username);
+			await User.addJob(req.params.username, req.params.id);
+			return res.json({ applied: req.params.id });
+		} catch (err) {
+			return next(err);
+		}
+	}
+);
+
 /** PATCH /[username] { user } => { user }
  *
  * Data can include:

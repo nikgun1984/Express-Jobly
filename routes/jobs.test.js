@@ -85,15 +85,15 @@ describe("GET /jobs", function () {
 				},
 				{
 					title: "Position2",
-					salary: 100000,
+					salary: 200000,
 					equity: "0.00043",
 					companyHandle: "c2",
 					id: expect.any(Number),
 				},
 				{
 					title: "Position3",
-					salary: 100000,
-					equity: "0.00043",
+					salary: 50000,
+					equity: "0",
 					companyHandle: "c1",
 					id: expect.any(Number),
 				},
@@ -110,6 +110,43 @@ describe("GET /jobs", function () {
 					equity: "0.00043",
 					companyHandle: "c3",
 					id: expect.any(Number),
+				},
+			],
+		});
+	});
+	test("query hasEquity", async function () {
+		const resp = await request(app).get("/jobs").query({ hasEquity: "true" });
+		expect(resp.body).toEqual({
+			jobs: [
+				{
+					title: "Position1",
+					salary: 100000,
+					equity: "0.00043",
+					companyHandle: "c3",
+					id: jobIds[0],
+				},
+				{
+					title: "Position2",
+					salary: 200000,
+					equity: "0.00043",
+					companyHandle: "c2",
+					id: jobIds[1],
+				},
+			],
+		});
+	});
+	test("query hasEquity,title,salary", async function () {
+		const resp = await request(app)
+			.get("/jobs")
+			.query({ title: "Position1", minSalary: 70000, hasEquity: "true" });
+		expect(resp.body).toEqual({
+			jobs: [
+				{
+					title: "Position1",
+					salary: 100000,
+					equity: "0.00043",
+					companyHandle: "c3",
+					id: jobIds[0],
 				},
 			],
 		});
@@ -132,8 +169,8 @@ describe("GET /jobs/:id", function () {
 		});
 	});
 
-	test("not found for no such company", async function () {
-		const resp = await request(app).get(`/jobs/0`);
+	test("not found for no such job", async function () {
+		const resp = await request(app).get(`/jobs/nope`);
 		expect(resp.statusCode).toEqual(500);
 	});
 });
@@ -152,8 +189,31 @@ describe("PATCH /jobs/:id", function () {
 		});
 	});
 
-	test("not found for no such company", async function () {
+	test("not found for no such job", async function () {
 		const resp = await request(app).get(`/jobs/0`);
+		expect(resp.statusCode).toEqual(500);
+	});
+});
+
+/************************************** DELETE /companies/:handle */
+
+describe("DELETE /jobs/:id", function () {
+	test("jobs for users", async function () {
+		const resp = await request(app)
+			.delete(`/jobs/${jobIds[0]}`)
+			.set("authorization", `Bearer ${adminToken}`);
+		expect(resp.body).toEqual({ deleted: `${jobIds[0]}` });
+	});
+
+	test("unauth for anon", async function () {
+		const resp = await request(app).delete(`/jobs/${jobIds[0]}`);
+		expect(resp.statusCode).toEqual(401);
+	});
+
+	test("not found for no such job position", async function () {
+		const resp = await request(app)
+			.delete(`/jobs/nope`)
+			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(500);
 	});
 });

@@ -34,7 +34,6 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 		}
 
 		const job = await Job.create(req.body);
-		console.log("IN THE ROUTE:   " + job);
 		return res.status(201).json({ job });
 	} catch (err) {
 		return next(err);

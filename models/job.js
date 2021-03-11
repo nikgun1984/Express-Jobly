@@ -44,7 +44,7 @@ class Job {
 			            equity,
 						company_handle AS "companyHandle"
 			            FROM jobs ${
-										queryArray.length ? "WHERE " + queryArray.join("") : ""
+										queryArray.length ? "WHERE " + queryArray.join(" AND ") : ""
 									} ORDER BY title`
 		);
 		return jobRes.rows;
@@ -71,9 +71,21 @@ class Job {
 		);
 
 		const job = jobRes.rows[0];
-
+		console.log("JOB: " + JSON.stringify(job));
 		if (!job) throw new NotFoundError(`No job: ${id}`);
-
+		const company = await db.query(
+			`SELECT handle,
+								name,
+								description,
+								num_employees AS "numEmployees",
+								logo_url AS "logoUrl" 
+		                  FROM companies 
+						  WHERE handle = $1
+		                 `,
+			[job.companyHandle]
+		);
+		delete job.companyHandle;
+		job.company = company.rows[0];
 		return job;
 	}
 

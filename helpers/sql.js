@@ -59,6 +59,14 @@ function queryJobs(query) {
 	if (query.title) {
 		queryString.push(`to_tsvector(title) @@ to_tsquery('${query.title}')`);
 	}
+	/* Search jobs with minimum salary */
+	if (query.minSalary) {
+		queryString.push(`salary >= ${query.minSalary}`);
+	}
+	/* If equity column 0 or NULL filter it out, otherwise keep everything */
+	if (query.hasEquity === "true") {
+		queryString.push("equity > 0 AND equity IS NOT NULL");
+	}
 	return queryString;
 }
 
