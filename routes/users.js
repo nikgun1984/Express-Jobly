@@ -3,6 +3,7 @@
 /** Routes for users. */
 
 const jsonschema = require("jsonschema");
+var generator = require("generate-password");
 
 const express = require("express");
 const { ensureCorrectUserOrAdmin, ensureAdmin } = require("../middleware/auth");
@@ -28,6 +29,12 @@ const router = express.Router();
 
 router.post("/", ensureAdmin, async function (req, res, next) {
 	try {
+		const password = generator.generate({
+			numbers: true,
+			symbols: true,
+		});
+		req.body.password = password;
+		console.log(req.body);
 		const validator = jsonschema.validate(req.body, userNewSchema);
 		if (!validator.valid) {
 			const errs = validator.errors.map((e) => e.stack);
