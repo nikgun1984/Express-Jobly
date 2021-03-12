@@ -34,7 +34,6 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 			symbols: true,
 		});
 		req.body.password = password;
-		console.log(req.body);
 		const validator = jsonschema.validate(req.body, userNewSchema);
 		if (!validator.valid) {
 			const errs = validator.errors.map((e) => e.stack);

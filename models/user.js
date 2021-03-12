@@ -153,13 +153,13 @@ class User {
 
 	/* ADD job to User's job's list 
   
-   * Returns { application --> {username, job_id } }
+   * Returns { application --> {username, job_id, app_state } }
 	 *
 	 * Throws NotFoundError if user or job_id found.
    * If so it won't proceed to insert values into the table
   */
 
-	static async addJob(username, id) {
+	static async addJob(username, id, state) {
 		// check if username and job do exist
 		const jobCheck = await db.query(
 			`SELECT id
@@ -186,12 +186,13 @@ class User {
       INSERT INTO applications
       (
         username,
-        job_id
+        job_id,
+        app_state
       )
-      VALUES ($1, $2)
-      RETURNING username,job_id as "jobId"
+      VALUES ($1, $2, $3)
+      RETURNING username,job_id as "jobId", app_state as "appState"
     `,
-			[username, id]
+			[username, id, state]
 		);
 
 		const application = applications.rows[0];

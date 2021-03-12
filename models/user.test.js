@@ -159,8 +159,12 @@ describe("get", function () {
 
 describe("add a job id to the users", function () {
 	test("works", async function () {
-		const application = await User.addJob("u1", jobIDs[1]);
-		expect(application).toEqual({ username: "u1", jobId: jobIDs[1] });
+		const application = await User.addJob("u1", jobIDs[1], "applied");
+		expect(application).toEqual({
+			username: "u1",
+			jobId: jobIDs[1],
+			appState: "applied",
+		});
 		// check if there are 2 applications in jobs
 		const user = await User.get("u1");
 		expect(user.jobs).toEqual([jobIDs[0], jobIDs[1]]);
