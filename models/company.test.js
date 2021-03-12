@@ -12,6 +12,7 @@ const {
 	commonBeforeEach,
 	commonAfterEach,
 	commonAfterAll,
+	jobIDs,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -56,7 +57,7 @@ describe("create", function () {
 			await Company.create(newCompany);
 			fail();
 		} catch (err) {
-			expect(err instanceof UnauthorizedError).toBeTruthy();
+			expect(err instanceof BadRequestError).toBeTruthy();
 		}
 	});
 });
@@ -146,6 +147,20 @@ describe("get", function () {
 			description: "Desc1",
 			numEmployees: 1,
 			logoUrl: "http://c1.img",
+			jobs: [
+				{
+					equity: "0.097",
+					id: jobIDs[0],
+					salary: 120000,
+					title: "Software Engineer",
+				},
+				{
+					equity: "0.054",
+					id: jobIDs[1],
+					salary: 115000,
+					title: "Front End Developer ",
+				},
+			],
 		});
 	});
 

@@ -35,8 +35,7 @@ describe("POST /", function () {
 			.post("/jobs")
 			.send(newJob)
 			.set("authorization", `Bearer ${adminToken}`);
-		console.log("here");
-		console.log(resp.body);
+
 		expect(resp.statusCode).toEqual(201);
 		expect(resp.body).toEqual({
 			job: {
@@ -164,7 +163,13 @@ describe("GET /jobs/:id", function () {
 				title: "Position1",
 				salary: 100000,
 				equity: "0.00043",
-				companyHandle: "c3",
+				company: {
+					description: "Desc3",
+					handle: "c3",
+					logoUrl: "http://c3.img",
+					name: "C3",
+					numEmployees: 3,
+				},
 			},
 		});
 	});
@@ -184,7 +189,13 @@ describe("PATCH /jobs/:id", function () {
 				title: "Position1",
 				salary: 100000,
 				equity: "0.00043",
-				companyHandle: "c3",
+				company: {
+					description: "Desc3",
+					handle: "c3",
+					logoUrl: "http://c3.img",
+					name: "C3",
+					numEmployees: 3,
+				},
 			},
 		});
 	});

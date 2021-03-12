@@ -14,6 +14,7 @@ const {
 	commonBeforeEach,
 	commonAfterEach,
 	commonAfterAll,
+	jobIDs,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -23,6 +24,7 @@ afterAll(commonAfterAll);
 
 describe("create", function () {
 	const newJob = {
+		id: expect.any(Number),
 		title: "AWS Engineer",
 		salary: 125000,
 		equity: 0.097,
@@ -56,19 +58,63 @@ describe("findAll", function () {
 	test("works: no filter", async function () {
 		let jobs = await Job.findAll();
 		expect(jobs).toEqual([
-			{ title: "Algorithm Specialist", salary: 150000, equity: 0.074 },
-			{ title: "Backend Developer", salary: 120000, equity: 0.087 },
-			{ title: "Data Scientist", salary: 155000, equity: 0 },
-			{ title: "Front End Developer ", salary: 115000, equity: 0.054 },
-			{ title: "Node Engineer", salary: 125000, equity: 0.089 },
-			{ title: "Researcher", salary: 95000, equity: 0.065 },
-			{ title: "Software Engineer", salary: 120000, equity: 0.097 },
+			{
+				id: jobIDs[3],
+				companyHandle: "c2",
+				title: "Algorithm Specialist",
+				salary: 150000,
+				equity: 0.074,
+			},
+			{
+				id: jobIDs[2],
+				companyHandle: "c2",
+				title: "Backend Developer",
+				salary: 120000,
+				equity: 0.087,
+			},
+			{
+				id: expect.any(Number),
+				companyHandle: "c3",
+				title: "Data Scientist",
+				salary: 155000,
+				equity: 0,
+			},
+			{
+				id: jobIDs[1],
+				companyHandle: "c1",
+				title: "Front End Developer ",
+				salary: 115000,
+				equity: 0.054,
+			},
+			{
+				id: jobIDs[6],
+				companyHandle: "c3",
+				title: "Node Engineer",
+				salary: 125000,
+				equity: 0.089,
+			},
+			{
+				id: jobIDs[4],
+				companyHandle: "c2",
+				title: "Researcher",
+				salary: 95000,
+				equity: 0.065,
+			},
+			{
+				id: jobIDs[0],
+				companyHandle: "c1",
+				title: "Software Engineer",
+				salary: 120000,
+				equity: 0.097,
+			},
 		]);
 	});
 	test("works: with filter title", async function () {
 		let jobs = await Job.findAll({ title: "scientist" });
 		expect(jobs).toEqual([
 			{
+				id: expect.any(Number),
+				companyHandle: "c3",
 				title: "Data Scientist",
 				salary: 155000,
 				equity: 0,

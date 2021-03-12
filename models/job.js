@@ -71,7 +71,6 @@ class Job {
 		);
 
 		const job = jobRes.rows[0];
-		console.log("JOB: " + JSON.stringify(job));
 		if (!job) throw new NotFoundError(`No job: ${id}`);
 		const company = await db.query(
 			`SELECT handle,
