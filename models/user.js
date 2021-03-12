@@ -140,13 +140,13 @@ class User {
 
 		const userJobs = await db.query(
 			`
-      SELECT job_id AS "jobId"
+      SELECT job_id
       FROM applications WHERE username = $1
     `,
 			[username]
 		);
 
-		user.jobs = userJobs.rows.map((a) => a.job_id);
+		user.jobs = userJobs.rows.map((app) => app.job_id);
 
 		return user;
 	}
